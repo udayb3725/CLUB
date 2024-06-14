@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Slide</title>
+    <link rel="stylesheet" href="shake.css">
+    <style>
+        /* Style for the slide */
+        .navigation-slide {
+            position: fixed;
+            top: -250px; /* Hide the slide initially */
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            transition: top 0.3s ease-in-out;
+            z-index: 999; /* Ensure it's above other content */
+        }
+
+        /* Style for the clickable icon */
+        .menu-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            z-index: 1000; /* Ensure it's above other content */
+        }
+
+        /* Style for the words */
+        .navigation-slide a {
+            display: block; /* Display the words one below the other */
+            padding: 10px; /* Add padding to the words */
+            margin-bottom: 5px; /* Add space between the words */
+            text-decoration: none;
+            color: #fff;
+        }
+
+        /* Background colors for the words */
+        .navigation-slide a:nth-child(1) {
+            background-color: #ff5733; /* Change the background color for the first word */
+        }
+
+        .navigation-slide a:nth-child(2) {
+            background-color: #33ff57; /* Change the background color for the second word */
+        }
+
+        .navigation-slide a:nth-child(3) {
+            background-color: #5733ff; /* Change the background color for the third word */
+        }
+    </style>
+</head>
+<body>
+
+<div class="menu-icon" onclick="toggleMenu()">
+    <!-- Three dashes icon -->
+    &#9776;
+</div>
+
+<div class="navigation-slide" id="navigationSlide">
+    <!-- Clickable words -->
+    <a href="Calculate.html">Calculate</a>
+    <a href="shake.html">Shake</a>
+    <a href="stock.html">stock</a>
+    <!-- <a href="page3.html">Page 3</a> -->
+</div>
+
+<!-- Your content here -->
+<!-- This could be your main content, where this navigation slide will appear on top -->
+<div style="margin-top: 50px;">
+    <h1>Shake App</h1>
+    <div id="add-customer">
+        <h2>Add Customer</h2>
+        <input type="text" id="customer-name" placeholder="Enter customer name">
+        <button onclick="addCustomer()">Add Customer</button>
+    </div>
+    <div id="take-attendance">
+        <h2>Shake Taken</h2>
+        <select id="customer-dropdown">
+            <option value="" disabled selected>Select a customer</option>
+        </select>
+        <button onclick="recordAttendance()">Record</button>
+    </div>
+    <div id="attendance-record">
+        <h2>Record</h2>
+        <ul id="record-list"></ul>
+    </div>
+    <div id="attendance-summary">
+        <h2>Summary</h2>
+        <ul id="summary-list"></ul>
+    </div>
+    <script src="shake.js"></script>
+</div>
+
+<script>
+    // Function to toggle the visibility of the slide-out menu
+    function toggleMenu() {
+        var navigationSlide = document.getElementById("navigationSlide");
+        if (navigationSlide.style.top === "0px") {
+            navigationSlide.style.top = "-250px"; // Slide up
+        } else {
+            navigationSlide.style.top = "0px"; // Slide down
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculate Fitness</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #FFDFB7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .menu-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      z-index: 1000;
+      font-size: 24px;
+    }
+
+    .navigation-slide {
+      position: fixed;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      transition: top 0.3s ease-in-out;
+      z-index: 999;
+    }
+
+    .navigation-slide a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: #fff;
+      background-color: #444;
+      margin: 5px 0;
+    }
+
+    .navigation-slide a:hover {
+      background-color: #555;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    form {
+      background-color: #FFFFFF;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: calc(100% - 40px);
+      max-width: 400px;
+      box-sizing: border-box;
+      margin: 20px 0;
+    }
+
+    label, input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      box-sizing: border-box;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    input[type="button"], input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    input[type="button"]:hover, input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: calc(100% - 40px);
+      max-width: 400px;
+      display: none;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 600px) {
+      .navigation-slide {
+        padding: 5px;
+      }
+
+      .menu-icon {
+        font-size: 28px;
+      }
+
+      form, #result {
+        width: 100%;
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="menu-icon" onclick="toggleMenu()">
+  &#9776; Menu
+</div>
+
+<div class="navigation-slide" id="navigationSlide">
+  <a href="Calculate.html">Calculator</a>
+  <a href="shake.html">Shake</a>
+  <a href="stock.html">stock</a>
+</div>
+
+<div>
+    <h1>Calculate Fitness</h1>
+    <form id="fitnessForm" method="POST" name="google-sheet">
+        <label for="name">Name</label>
+        <input id="name" name="name" required type="text" />
+        
+        <label for="date">Date</label>
+        <input id="date" name="date" required type="date" />
+        
+        <label for="gender">Gender</label>
+        <select name="gender" id="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="others">Others</option>
+        </select>
+        
+        <label for="age">Age</label>
+        <input id="age" name="age" required type="number" />
+        
+        <label for="weight">Weight (kg)</label>
+        <input id="weight" name="weight" required type="number" />
+        
+        <label for="height">Height (cm)</label>
+        <input id="height" name="height" required type="number" />
+        
+        <label for="fat">Fat (%)</label>
+        <input id="fat" name="fat" required type="number" />
+        
+        <label for="visceral fat">Visceral Fat (%)</label>
+        <input id="visceral fat" name="visceral fat" required type="number" />
+        
+        <label for="rmr">RMR</label>
+        <input id="rmr" name="rmr" required type="number" />
+        
+        <label for="body age">Body Age</label>
+        <input id="body age" name="body age" required type="number" />
+        
+        <input onclick="calculateFitness()" type="button" value="Calculate" />
+        <input type="submit">
+    </form>
+
+    <div id="result">
+        <h2>Result</h2>
+        <p>Weight Ideal: <span id="weightIdeal"></span></p>
+        <p>Waste Fluid: <span id="wasteFluid"></span></p>
+        <p>Unwanted Fat Less Weight: <span id="fatLessWeight"></span></p>
+        <p>Weight to Be Lost: <span id="weightToBeLoss"></span></p>
+        <p>Fat to Be There: <span id="fatCal"></span></p>
+        <p>BMI: <span id="bmi"></span></p>
+    </div>
+</div>
+
+<script>
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbxrVX5s3WTZwUJFK0yxmC7i3HfoQVT7SuPWe0Ro5SudM-U5yffqGvJGjybAx95JPMuK/exec';
+  const form = document.forms['google-sheet'];
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+      .then(response => alert("Successfully submitted"))
+      .catch(error => console.error('Error!', error.message));
+  });
+
+  function toggleMenu() {
+    const navigationSlide = document.getElementById("navigationSlide");
+    if (navigationSlide.style.top === "0px") {
+      navigationSlide.style.top = "-100%";
+    } else {
+      navigationSlide.style.top = "0px";
+    }
+  }
+
+  function calculateFitness() {
+    const gender = document.getElementById("gender").value.toLowerCase();
+    const age = parseFloat(document.getElementById("age").value);
+    const weight = parseFloat(document.getElementById("weight").value);
+    const height = parseFloat(document.getElementById("height").value);
+    const fat = parseFloat(document.getElementById("fat").value);
+
+    const bmi = weight / (height ** 2) * 10000;
+    let fatCal, sub, weightIdeal, subIdeal, wasteFluid, fatLessWeight, weightToBeLoss;
+
+    if (gender === "male") {
+      fatCal = 1.2 * bmi + 0.23 * age - 16.2;
+      sub = height - 152.4;
+      weightIdeal = 50 + 0.91 * sub;
+      subIdeal = fat - 15;
+    } else if (gender === "female") {
+      fatCal = 1.2 * bmi + 0.23 * age - 5.4;
+      sub = height - 152.4;
+      weightIdeal = 48 + 1.1 * sub;
+      subIdeal = fat - 25;
+    } else {
+      alert("Please provide a valid gender ('male' or 'female').");
+      return;
+    }
+
+    wasteFluid = weight * subIdeal / 100;
+    fatLessWeight = (weight * 100 - weight * subIdeal) / 100;
+    weightToBeLoss = weight - weightIdeal;
+
+    document.getElementById("bmi").innerText = bmi.toFixed(2);
+    document.getElementById("weightIdeal").innerText = weightIdeal.toFixed(2);
+    document.getElementById("wasteFluid").innerText = wasteFluid.toFixed(2);
+    document.getElementById("fatLessWeight").innerText = fatLessWeight.toFixed(2);
+    document.getElementById("weightToBeLoss").innerText = weightToBeLoss.toFixed(2);
+    document.getElementById("fatCal").innerText = fatCal.toFixed(2);
+
+    document.getElementById("result").style.display = "block";
+  }
+</script>
+
+</body>
+</html>

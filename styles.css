@@ -1,0 +1,50 @@
+/* Basic styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: right;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+button {
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #777;
+}
+
+main {
+    margin-top: 60px; /* Add some margin to avoid overlap with header */
+}
+
+/* Gallery styles */
+.image-gallery {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.image-gallery img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px; /* Space between images */
+    border: 2px solid rgb(253, 251, 251);
+    padding: 10px;
+    border-radius: 40px;
+}
